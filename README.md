@@ -1,0 +1,2 @@
+# JopaStronginoi
+пиздец
