@@ -35,7 +35,25 @@ class ErrorPlotWindow(QtWidgets.QMainWindow):
         self.canvas.draw()
 
 class Main_window(QtWidgets.QMainWindow):
-    def show_info(self, initial_v1, initial_v2, final_v1, final_v2, max_e1, max_e2, min_e1, min_e2, total_steps, boundary_layer_steps, post_boundary_layer_steps):
+
+    def show_info(self):#+
+        # Получаем данные из последней строки таблицы#+
+        last_row = self.table.rowCount() - 1#+
+        if last_row < 0:#+
+            QtWidgets.QMessageBox.warning(self, "Предупреждение", "Сначала выполните расчет!")#+
+            return#+
+#+
+        initial_v1 = float(self.table.item(0, 3).text())#+
+        initial_v2 = float(self.table.item(0, 4).text())#+
+        final_v1 = float(self.table.item(last_row, 3).text())#+
+        final_v2 = float(self.table.item(last_row, 4).text())#+
+#+
+        max_e1 = max(float(self.table.item(i, 5).text()) for i in range(self.table.rowCount()))#+
+        max_e2 = max(float(self.table.item(i, 6).text()) for i in range(self.table.rowCount()))#+
+        min_e1 = min(float(self.table.item(i, 5).text()) for i in range(self.table.rowCount()))#+
+        min_e2 = min(float(self.table.item(i, 6).text()) for i in range(self.table.rowCount()))#+
+#+
+        total_steps = self.table.rowCount()#+
         info = f"""
         Начальные численные решения: v1 = {initial_v1:.6e}, v2 = {initial_v2:.6e}
         Конечные численные решения: v1 = {final_v1:.6e}, v2 = {final_v2:.6e}
@@ -45,7 +63,9 @@ class Main_window(QtWidgets.QMainWindow):
         Минимальное значение E2: {min_e2:.6e}
         Всего шагов: {total_steps}
         """
-        QMessageBox.information(self, "Справка", info)                                  
+        QMessageBox.information(self, "Справка", info)#-
+        QtWidgets.QMessageBox.information(self, "Справка", info)#+
+
     def __init__(self) -> None:
         super(Main_window, self).__init__()
         script_dir = os.path.dirname(os.path.realpath(__file__))
@@ -73,9 +93,13 @@ class Main_window(QtWidgets.QMainWindow):
         )
 
         self.error_plot_btn = QtWidgets.QPushButton("График погрешности", self)
-        self.error_plot_btn.setGeometry(10, 10, 150, 30)  # x, y, width, height
+        self.error_plot_btn.setGeometry(550,59, 150, 30)#+
         self.error_plot_btn.clicked.connect(self.show_error_plot)
-        
+
+        # Добавляем новую кнопку для справки#+
+        self.info_btn = QtWidgets.QPushButton("Справка", self)#+
+        self.info_btn.setGeometry(550, 10, 100, 30)  # Располагаем рядом с кнопкой графика погрешности#+
+        self.info_btn.clicked.connect(self.show_info)#+
 
         self.system_label.setPixmap(pixmap)
         self.system_label.setMask(pixmap.mask())

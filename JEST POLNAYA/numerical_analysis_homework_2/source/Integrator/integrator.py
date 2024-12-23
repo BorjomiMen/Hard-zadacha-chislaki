@@ -47,14 +47,15 @@ class Integrator:
 
                 if error > self._eps:
                     self._step /= 2.
-                
+
                 else:
                     x = x_w
                     v_1 = v_1_w
                     v_2 = v_2_w
 
-                    if error < self._eps / (2 ** (2 + 1)):
+                    if error < self._eps / (2 ** (3 + 1)):
                         self._step *= 2.
+
                     break
             return np.array([x, v_1, v_2], dtype=np.longdouble)
         else:
