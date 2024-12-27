@@ -1,2 +1,2 @@
-# JopaStronginoi
+# Jest' 
 пиздец
